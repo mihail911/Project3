@@ -20,7 +20,7 @@ def objective_func(a_pred, X, y, reg_param=0):
     residual_sqr = (y_pred - y)**2
 
     # NOTE: Using MSE here instead of SE as in project handout
-    return 0.5 * np.sum(residual_sqr, axis=0) / num_points + reg_param * np.linalg.norm(a_pred)
+    return 0.5 * np.sum(residual_sqr, axis=0) + reg_param * np.linalg.norm(a_pred)
 
 
 def closed_form_soln(X, y):
@@ -43,7 +43,7 @@ def batch_gradient_descent(X, y, lrate, epsilon, num_iters, reg_param=0.0):
 
         # Reshape for compatibility
         residual = residual.reshape(residual.shape[0], 1)
-        gradient = 1.0/m * np.sum(residual * X, axis=0) + 2*reg_param*a_curr
+        gradient = np.sum(residual * X, axis=0) + 2*reg_param*a_curr
 
         norm_grad = np.linalg.norm(gradient)
         if np.linalg.norm(gradient) < epsilon:
