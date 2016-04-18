@@ -14,13 +14,13 @@ def gen_data():
     return X, a_true, y
 
 
-def objective_func(a_pred, X, y, reg_param=0):
+def objective_func(a_pred, X, y, reg_param=0.0):
     num_points = X.shape[0]
     y_pred = X.dot(a_pred)
     residual_sqr = (y_pred - y)**2
 
     # NOTE: Using MSE here instead of SE as in project handout
-    return 0.5 * np.sum(residual_sqr, axis=0) + reg_param * np.linalg.norm(a_pred)
+    return 0.5 * np.sum(residual_sqr, axis=0) + reg_param * np.linalg.norm(a_pred)**2
 
 
 def closed_form_soln(X, y):
@@ -37,12 +37,13 @@ def batch_gradient_descent(X, y, lrate, epsilon, num_iters, reg_param=0.0):
     objective_func_values = []
 
     count = 0
-    #for _ in range(num_iters):
-    while True:
+    for _ in range(num_iters):
+    #while True:
         residual = X.dot(a_curr) - y[:, 0]
 
         # Reshape for compatibility
         residual = residual.reshape(residual.shape[0], 1)
+        prod = residual * X
         gradient = np.sum(residual * X, axis=0) + 2*reg_param*a_curr
 
         norm_grad = np.linalg.norm(gradient)
@@ -116,7 +117,10 @@ if __name__ == "__main__":
     # _, func_values_1 = batch_gradient_descent(X, y, lrates[0], epsilon, num_iters=20)
     # _, func_values_2 = batch_gradient_descent(X, y, lrates[1], epsilon, num_iters=20)
     # _, func_values_3 = batch_gradient_descent(X, y, lrates[2], epsilon, num_iters=20)
-
+    #
+    # print func_values_1
+    # print func_values_2
+    # print func_values_3
     #
     # # Plot objective func
     # num_iters = range(20)
@@ -140,9 +144,12 @@ if __name__ == "__main__":
     # _, func_values_1 = stochastic_gradient_descent(X, y, lrates[0], epsilon, num_iters=1000)
     # _, func_values_2 = stochastic_gradient_descent(X, y, lrates[1], epsilon, num_iters=1000)
     # _, func_values_3 = stochastic_gradient_descent(X, y, lrates[2], epsilon, num_iters=1000)
-
+    #
+    #
     # print func_values_1
-    # # Plot objective func
+    # print func_values_2
+    # print func_values_3
+    # # # Plot objective func
     # num_iters = range(1000)
     # fig, ax = plt.subplots()
     # ax.plot(num_iters, func_values_1, label="Lrate=0.001")
